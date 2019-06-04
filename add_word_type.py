@@ -18,21 +18,28 @@ with open('word_list_school1_test.csv', newline='') as csvfile:
     #     print(', '.join(row))
 
 
-for d in data[:100]:
+for i,d in enumerate(data):
     word = d[0]
-    c.execute('SELECT word,wordtype,definition FROM entries WHERE word=? collate nocase', (word,))
-    wordtype = c.fetchone()
-    if wordtype == None:
-        d.append('')
-    else:
-        d.append(wordtype[1])
+    try:
+        c.execute('SELECT word,wordtype FROM entries WHERE word=? collate nocase', (word,))
+    except:
+        print(word)
+        sys.exit(2)
 
-    c.execute('SELECT word,wordtype,count(*) FROM entries WHERE (lower(word) LIKE ? ) group by wordtype ', (word,))
-    wordtype = c.fetchone()
-    if wordtype == None:
+    record = c.fetchone()
+    if record == None:
         d.append('')
     else:
-        d.append(wordtype[1])
+        d.append(record[1])
+
+    c.execute('SELECT word,wordtype,count(*) FROM entries WHERE word=? collate nocase group by wordtype order by count(*) desc', (word,))
+    record = c.fetchone()
+    if record == None:
+        d.append('')
+    else:
+        d.append(record[1])
+    if i < 50 or i%100==0:
+        print(d)
 
 with open('word_list_school1_test_result.csv', 'w', newline='') as myfile:
      writer = csv.writer(myfile, quoting=csv.QUOTE_MINIMAL)
