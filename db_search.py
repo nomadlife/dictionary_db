@@ -13,11 +13,11 @@ c = conn.cursor()
 
 
 
-# for row in c.execute('SELECT word,wordtype,definition FROM entries WHERE word=? collate nocase', (word,)):
-#     print(row)
+for row in c.execute('SELECT word,wordtype,definition FROM entries WHERE word=? collate nocase', (word,)):
+    print(row)
 
-c.execute('SELECT word,wordtype,definition FROM entries WHERE word=? collate nocase', (word,))
-print(c.fetchone()[1])
+# c.execute('SELECT word,wordtype,definition FROM entries WHERE word=? collate nocase', (word,))
+# print(c.fetchone())
 
 conn.commit()   
 conn.close()
